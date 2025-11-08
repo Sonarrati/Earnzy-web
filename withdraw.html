@@ -4,17 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw - EARNZY</title>
-    <!-- Same head content -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #0ea5a4 100%); }
+        .bottom-nav { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
-    
+    <header class="gradient-bg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="dashboard.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-xl font-bold">Withdraw</h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-green-700 bg-opacity-50 px-3 py-1 rounded-lg">
+                <i class="fas fa-coins text-yellow-300"></i>
+                <span id="userBalance" class="font-medium">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
     <main class="container mx-auto px-4 py-6 pb-20">
         <!-- Balance Card -->
         <div class="bg-white rounded-2xl p-6 shadow-md mb-6 text-center">
             <div class="text-gray-600 mb-2">Available Balance</div>
             <div id="withdrawBalance" class="text-4xl font-bold text-green-600 mb-4">₹0.00</div>
-            <div class="text-sm text-gray-500">Minimum withdrawal: ₹25</div>
+            <div class="text-sm text-gray-500">
+                Minimum withdrawal: ₹25 | Daily limit: ₹150
+            </div>
         </div>
 
         <!-- Withdrawal Methods -->
@@ -23,24 +54,35 @@
             
             <div class="space-y-3">
                 <!-- UPI Method -->
-                <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
+                <label class="flex items-center space-x-3 p-3 border-2 border-green-500 rounded-lg cursor-pointer bg-green-50">
                     <input type="radio" name="withdrawMethod" value="upi" class="text-green-600" checked>
                     <i class="fas fa-mobile-alt text-2xl text-blue-500"></i>
-                    <div>
+                    <div class="flex-1">
                         <div class="font-medium">UPI</div>
-                        <div class="text-sm text-gray-500">Instant transfer</div>
+                        <div class="text-sm text-gray-500">Instant transfer to any UPI ID</div>
                     </div>
-                </div>
+                    <div class="text-green-600 font-medium">Recommended</div>
+                </label>
 
                 <!-- Paytm Method -->
-                <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
+                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                     <input type="radio" name="withdrawMethod" value="paytm" class="text-green-600">
                     <i class="fab fa-paytm text-2xl text-blue-400"></i>
                     <div>
                         <div class="font-medium">Paytm Wallet</div>
                         <div class="text-sm text-gray-500">Within 24 hours</div>
                     </div>
-                </div>
+                </label>
+
+                <!-- Bank Transfer Method -->
+                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input type="radio" name="withdrawMethod" value="bank" class="text-green-600">
+                    <i class="fas fa-university text-2xl text-green-500"></i>
+                    <div>
+                        <div class="font-medium">Bank Transfer</div>
+                        <div class="text-sm text-gray-500">2-3 business days</div>
+                    </div>
+                </label>
             </div>
         </div>
 
@@ -49,7 +91,7 @@
             <h2 class="text-lg font-bold text-gray-800 mb-4">Withdrawal Details</h2>
             
             <div class="space-y-4">
-                <!-- UPI ID -->
+                <!-- UPI ID Input -->
                 <div id="upiSection">
                     <label class="block text-sm font-medium text-gray-700 mb-2">UPI ID</label>
                     <input 
@@ -58,9 +100,46 @@
                         class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         placeholder="yourname@upi"
                     >
+                    <div class="text-xs text-gray-500 mt-1">Enter your UPI ID (e.g., username@paytm, username@ybl)</div>
                 </div>
 
-                <!-- Amount -->
+                <!-- Paytm Number Input -->
+                <div id="paytmSection" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Paytm Number</label>
+                    <input 
+                        type="tel" 
+                        id="paytmNumber"
+                        class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="Enter your Paytm number"
+                        maxlength="10"
+                    >
+                </div>
+
+                <!-- Bank Details Input -->
+                <div id="bankSection" class="hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Account Number</label>
+                            <input 
+                                type="text" 
+                                id="accountNumber"
+                                class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="Account number"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">IFSC Code</label>
+                            <input 
+                                type="text" 
+                                id="ifscCode"
+                                class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                placeholder="IFSC code"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amount Input -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
                     <input 
@@ -71,34 +150,441 @@
                         class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                         placeholder="Enter amount (₹25-150)"
                     >
-                    <div class="text-xs text-gray-500 mt-1">Daily limit: ₹150 | Fee: ₹2</div>
+                    <div class="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>Minimum: ₹25</span>
+                        <span>Maximum: ₹150</span>
+                        <span>Fee: ₹2</span>
+                    </div>
+                </div>
+
+                <!-- Amount Quick Select -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button class="amount-btn border border-gray-300 py-2 rounded-lg text-sm hover:bg-gray-50" data-amount="25">₹25</button>
+                    <button class="amount-btn border border-gray-300 py-2 rounded-lg text-sm hover:bg-gray-50" data-amount="50">₹50</button>
+                    <button class="amount-btn border border-gray-300 py-2 rounded-lg text-sm hover:bg-gray-50" data-amount="100">₹100</button>
+                </div>
+
+                <!-- Receivable Amount -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex justify-between items-center text-green-700">
+                        <span>You will receive:</span>
+                        <span id="receivableAmount" class="font-bold">₹0.00</span>
+                    </div>
+                    <div class="text-xs text-green-600 mt-1">
+                        ₹2 processing fee deducted
+                    </div>
                 </div>
             </div>
 
             <!-- Withdrawal Button -->
             <button 
                 id="withdrawBtn"
-                class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition mt-6 disabled:opacity-50 disabled:cursor-not-allowed pulse-animation"
             >
                 Request Withdrawal
             </button>
         </div>
 
-        <!-- Recent Withdrawals -->
+        <!-- Withdrawal History -->
         <div class="bg-white rounded-2xl p-6 shadow-md">
             <h2 class="text-lg font-bold text-gray-800 mb-4">Recent Withdrawals</h2>
-            <div id="withdrawalHistory">
+            <div id="withdrawalHistory" class="space-y-3">
                 <!-- History will be loaded here -->
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-wallet text-3xl mb-3 opacity-50"></i>
+                    <div>No withdrawal history yet</div>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- Bottom Navigation -->
-    
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div class="flex justify-around items-center py-3">
+            <a href="dashboard.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-xs">Tasks</span>
+            </a>
+            <a href="withdraw.html" class="flex flex-col items-center text-green-600">
+                <i class="fas fa-wallet text-xl mb-1"></i>
+                <span class="text-xs">Withdraw</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
     <script src="js/supabase.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // JavaScript for withdrawal functionality
+        class WithdrawalManager {
+            constructor() {
+                this.userProfile = null;
+                this.withdrawalHistory = [];
+                this.processingFee = 2;
+                this.init();
+            }
+
+            async init() {
+                await this.checkAuth();
+                await this.loadWithdrawalHistory();
+                this.setupEventListeners();
+                this.updateReceivableAmount();
+            }
+
+            async checkAuth() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                this.userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                this.updateBalance();
+            }
+
+            updateBalance() {
+                const balance = this.userProfile.balance || 0;
+                document.getElementById('userBalance').textContent = `₹${balance.toFixed(2)}`;
+                document.getElementById('withdrawBalance').textContent = `₹${balance.toFixed(2)}`;
+                
+                // Disable withdraw button if balance is low
+                if (balance < 25) {
+                    document.getElementById('withdrawBtn').disabled = true;
+                    document.getElementById('withdrawBtn').classList.remove('pulse-animation');
+                }
+            }
+
+            async loadWithdrawalHistory() {
+                const { data: withdrawals, error } = await supabase
+                    .from('withdrawals')
+                    .select('*')
+                    .eq('user_id', this.userProfile.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (!error && withdrawals) {
+                    this.withdrawalHistory = withdrawals;
+                    this.renderWithdrawalHistory();
+                }
+            }
+
+            renderWithdrawalHistory() {
+                const container = document.getElementById('withdrawalHistory');
+                
+                if (this.withdrawalHistory.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-wallet text-3xl mb-3 opacity-50"></i>
+                            <div>No withdrawal history yet</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.withdrawalHistory.map(withdrawal => {
+                    const statusColors = {
+                        pending: 'text-yellow-600 bg-yellow-100',
+                        approved: 'text-green-600 bg-green-100',
+                        rejected: 'text-red-600 bg-red-100',
+                        completed: 'text-green-600 bg-green-100'
+                    };
+
+                    return `
+                        <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 ${statusColors[withdrawal.status]} rounded-full flex items-center justify-center">
+                                    <i class="fas fa-wallet text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800">${withdrawal.method.toUpperCase()} Withdrawal</div>
+                                    <div class="text-xs text-gray-500">${this.formatDate(withdrawal.created_at)}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-gray-800">₹${withdrawal.amount}</div>
+                                <div class="text-xs capitalize ${statusColors[withdrawal.status]} px-2 py-1 rounded-full">
+                                    ${withdrawal.status}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            setupEventListeners() {
+                // Method selection
+                document.querySelectorAll('input[name="withdrawMethod"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        this.showMethodSection(e.target.value);
+                    });
+                });
+
+                // Amount quick select
+                document.querySelectorAll('.amount-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const amount = e.target.dataset.amount;
+                        document.getElementById('withdrawAmount').value = amount;
+                        this.updateReceivableAmount();
+                    });
+                });
+
+                // Amount input change
+                document.getElementById('withdrawAmount').addEventListener('input', () => {
+                    this.updateReceivableAmount();
+                });
+
+                // Withdraw button
+                document.getElementById('withdrawBtn').addEventListener('click', () => {
+                    this.processWithdrawal();
+                });
+            }
+
+            showMethodSection(method) {
+                // Hide all sections
+                document.getElementById('upiSection').classList.add('hidden');
+                document.getElementById('paytmSection').classList.add('hidden');
+                document.getElementById('bankSection').classList.add('hidden');
+
+                // Show selected section
+                if (method === 'upi') {
+                    document.getElementById('upiSection').classList.remove('hidden');
+                } else if (method === 'paytm') {
+                    document.getElementById('paytmSection').classList.remove('hidden');
+                } else if (method === 'bank') {
+                    document.getElementById('bankSection').classList.remove('hidden');
+                }
+            }
+
+            updateReceivableAmount() {
+                const amount = parseFloat(document.getElementById('withdrawAmount').value) || 0;
+                const receivable = amount - this.processingFee;
+                
+                document.getElementById('receivableAmount').textContent = 
+                    receivable > 0 ? `₹${receivable.toFixed(2)}` : '₹0.00';
+            }
+
+            validateWithdrawal() {
+                const method = document.querySelector('input[name="withdrawMethod"]:checked').value;
+                const amount = parseFloat(document.getElementById('withdrawAmount').value);
+                const balance = this.userProfile.balance || 0;
+
+                // Check minimum amount
+                if (amount < 25) {
+                    alert('Minimum withdrawal amount is ₹25');
+                    return false;
+                }
+
+                // Check maximum amount
+                if (amount > 150) {
+                    alert('Maximum withdrawal amount is ₹150 per day');
+                    return false;
+                }
+
+                // Check balance
+                if (amount > balance) {
+                    alert('Insufficient balance');
+                    return false;
+                }
+
+                // Check method-specific validations
+                if (method === 'upi') {
+                    const upiId = document.getElementById('upiId').value.trim();
+                    if (!upiId || !upiId.includes('@')) {
+                        alert('Please enter a valid UPI ID');
+                        return false;
+                    }
+                } else if (method === 'paytm') {
+                    const paytmNumber = document.getElementById('paytmNumber').value.trim();
+                    if (!paytmNumber || paytmNumber.length !== 10) {
+                        alert('Please enter a valid 10-digit Paytm number');
+                        return false;
+                    }
+                } else if (method === 'bank') {
+                    const accountNumber = document.getElementById('accountNumber').value.trim();
+                    const ifscCode = document.getElementById('ifscCode').value.trim();
+                    
+                    if (!accountNumber || accountNumber.length < 9) {
+                        alert('Please enter a valid account number');
+                        return false;
+                    }
+                    
+                    if (!ifscCode || ifscCode.length !== 11) {
+                        alert('Please enter a valid IFSC code');
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            async processWithdrawal() {
+                if (!this.validateWithdrawal()) return;
+
+                const withdrawBtn = document.getElementById('withdrawBtn');
+                withdrawBtn.disabled = true;
+                withdrawBtn.textContent = 'Processing...';
+
+                try {
+                    const method = document.querySelector('input[name="withdrawMethod"]:checked').value;
+                    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+                    const balance = this.userProfile.balance || 0;
+
+                    // Check if user has already withdrawn today
+                    const today = new Date().toISOString().split('T')[0];
+                    const { data: todayWithdrawals } = await supabase
+                        .from('withdrawals')
+                        .select('amount')
+                        .eq('user_id', this.userProfile.id)
+                        .eq('status', 'pending')
+                        .gte('created_at', today);
+
+                    const todayTotal = todayWithdrawals?.reduce((sum, w) => sum + w.amount, 0) || 0;
+                    
+                    if (todayTotal + amount > 150) {
+                        alert(`Daily withdrawal limit exceeded. You can withdraw only ₹${150 - todayTotal} more today.`);
+                        return;
+                    }
+
+                    // Get method details
+                    let methodDetails = {};
+                    if (method === 'upi') {
+                        methodDetails.upi_id = document.getElementById('upiId').value.trim();
+                    } else if (method === 'paytm') {
+                        methodDetails.paytm_number = document.getElementById('paytmNumber').value.trim();
+                    } else if (method === 'bank') {
+                        methodDetails.account_number = document.getElementById('accountNumber').value.trim();
+                        methodDetails.ifsc_code = document.getElementById('ifscCode').value.trim();
+                    }
+
+                    // Create withdrawal record
+                    const withdrawal = {
+                        user_id: this.userProfile.id,
+                        amount: amount,
+                        method: method,
+                        status: 'pending',
+                        created_at: new Date().toISOString(),
+                        ...methodDetails
+                    };
+
+                    const { data, error } = await supabase
+                        .from('withdrawals')
+                        .insert([withdrawal]);
+
+                    if (error) throw error;
+
+                    // Update user balance
+                    const newBalance = balance - amount;
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ balance: newBalance })
+                        .eq('id', this.userProfile.id);
+
+                    if (updateError) throw updateError;
+
+                    // Record transaction
+                    const transaction = {
+                        user_id: this.userProfile.id,
+                        amount: -amount,
+                        type: 'withdrawal',
+                        status: 'pending',
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { error: txError } = await supabase
+                        .from('transactions')
+                        .insert([transaction]);
+
+                    if (txError) throw txError;
+
+                    // Update local data
+                    this.userProfile.balance = newBalance;
+                    localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+                    this.updateBalance();
+
+                    // Add to history
+                    this.withdrawalHistory.unshift(withdrawal);
+                    this.renderWithdrawalHistory();
+
+                    // Show success message
+                    this.showSuccessMessage(amount, method);
+
+                    // Reset form
+                    this.resetForm();
+
+                } catch (error) {
+                    console.error('Error processing withdrawal:', error);
+                    alert('Error processing withdrawal: ' + error.message);
+                } finally {
+                    withdrawBtn.disabled = false;
+                    withdrawBtn.textContent = 'Request Withdrawal';
+                }
+            }
+
+            showSuccessMessage(amount, method) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 text-center max-w-sm w-full">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-check text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Withdrawal Requested!</h3>
+                        <p class="text-gray-600 mb-4">Your withdrawal of <span class="font-bold text-green-600">₹${amount}</span> via ${method.toUpperCase()} has been submitted.</p>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                            <div class="text-sm text-yellow-700">
+                                <i class="fas fa-clock mr-1"></i>
+                                Processing time: ${this.getProcessingTime(method)}
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium">
+                            Continue
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            getProcessingTime(method) {
+                switch (method) {
+                    case 'upi': return 'Instant (Premium) or 24-48 hours (Free)';
+                    case 'paytm': return '12-24 hours';
+                    case 'bank': return '2-3 business days';
+                    default: return '24-48 hours';
+                }
+            }
+
+            resetForm() {
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('upiId').value = '';
+                document.getElementById('paytmNumber').value = '';
+                document.getElementById('accountNumber').value = '';
+                document.getElementById('ifscCode').value = '';
+                this.updateReceivableAmount();
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        }
+
+        // Initialize withdrawal manager
+        document.addEventListener('DOMContentLoaded', () => {
+            new WithdrawalManager();
+        });
     </script>
 </body>
 </html>
