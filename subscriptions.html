@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Plan - EARNZY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #0ea5a4 100%); }
+        .bottom-nav { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); }
+        .plan-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .plan-card:hover { transform: translateY(-5px); }
+        .popular-plan { transform: scale(1.05); }
+        .popular-plan:hover { transform: scale(1.05) translateY(-5px); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="dashboard.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-xl font-bold">Upgrade Plan</h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-green-700 bg-opacity-50 px-3 py-1 rounded-lg">
+                <i class="fas fa-coins text-yellow-300"></i>
+                <span id="userBalance" class="font-medium">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 pb-20">
+        <!-- Current Plan -->
+        <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Your Current Plan</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div id="currentPlanBadge" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                            Free Plan
+                        </div>
+                        <div id="planExpiry" class="text-sm text-gray-500"></div>
+                    </div>
+                    <p class="text-gray-600" id="planDescription">Basic features with standard rewards</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-gray-800" id="currentPlanPrice">₹0</div>
+                    <div class="text-sm text-gray-500">per month</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade Plans -->
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Choose Your Plan</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Silver Plan -->
+                <div class="plan-card bg-white rounded-2xl p-6 shadow-md border-2 border-gray-200">
+                    <div class="text-center mb-6">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-medal text-gray-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">Silver</h3>
+                        <div class="text-3xl font-bold text-gray-800 mb-2">₹99<span class="text-sm text-gray-500">/month</span></div>
+                        <div class="text-sm text-gray-500">Perfect for casual earners</div>
+                    </div>
+
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+20% Task Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+10% Ad Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>12-24h Withdrawals</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Priority Support</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm text-gray-400">
+                            <i class="fas fa-times"></i>
+                            <span>Instant Withdrawals</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm text-gray-400">
+                            <i class="fas fa-times"></i>
+                            <span>Exclusive Tasks</span>
+                        </li>
+                    </ul>
+
+                    <button 
+                        onclick="subscriptionManager.selectPlan('silver')"
+                        class="w-full bg-gray-600 text-white py-3 rounded-lg font-medium hover:bg-gray-700 transition"
+                    >
+                        Select Silver
+                    </button>
+                </div>
+
+                <!-- Gold Plan (Popular) -->
+                <div class="plan-card popular-plan bg-white rounded-2xl p-6 shadow-md border-2 border-yellow-300 relative">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                        MOST POPULAR
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-crown text-yellow-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">Gold</h3>
+                        <div class="text-3xl font-bold text-gray-800 mb-2">₹199<span class="text-sm text-gray-500">/month</span></div>
+                        <div class="text-sm text-gray-500">Best for regular users</div>
+                    </div>
+
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+30% Task Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+20% Ad Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Instant Withdrawals</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Priority Support</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Exclusive Tasks</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm text-gray-400">
+                            <i class="fas fa-times"></i>
+                            <span>VIP Support</span>
+                        </li>
+                    </ul>
+
+                    <button 
+                        onclick="subscriptionManager.selectPlan('gold')"
+                        class="w-full bg-yellow-600 text-white py-3 rounded-lg font-medium hover:bg-yellow-700 transition"
+                    >
+                        Select Gold
+                    </button>
+                </div>
+
+                <!-- Platinum Plan -->
+                <div class="plan-card bg-white rounded-2xl p-6 shadow-md border-2 border-purple-200">
+                    <div class="text-center mb-6">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-gem text-purple-500 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">Platinum</h3>
+                        <div class="text-3xl font-bold text-gray-800 mb-2">₹499<span class="text-sm text-gray-500">/month</span></div>
+                        <div class="text-sm text-gray-500">Maximum earning potential</div>
+                    </div>
+
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+50% Task Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>+30% Ad Rewards</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Instant Withdrawals</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>VIP Support</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Exclusive Tasks</span>
+                        </li>
+                        <li class="flex items-center space-x-2 text-sm">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>No Ads</span>
+                        </li>
+                    </ul>
+
+                    <button 
+                        onclick="subscriptionManager.selectPlan('platinum')"
+                        class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition"
+                    >
+                        Select Platinum
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Comparison -->
+        <div class="bg-white rounded-2xl p-6 shadow-md">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Plan Comparison</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="text-left py-3 font-medium text-gray-600">Feature</th>
+                            <th class="text-center py-3 font-medium text-gray-600">Free</th>
+                            <th class="text-center py-3 font-medium text-gray-600">Silver</th>
+                            <th class="text-center py-3 font-medium text-gray-600">Gold</th>
+                            <th class="text-center py-3 font-medium text-gray-600">Platinum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 font-medium">Task Rewards</td>
+                            <td class="text-center py-3">Standard</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+20%</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+30%</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+50%</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 font-medium">Ad Rewards</td>
+                            <td class="text-center py-3">Standard</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+10%</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+20%</td>
+                            <td class="text-center py-3 text-green-600 font-medium">+30%</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 font-medium">Withdrawal Time</td>
+                            <td class="text-center py-3">24-48h</td>
+                            <td class="text-center py-3 text-green-600 font-medium">12-24h</td>
+                            <td class="text-center py-3 text-green-600 font-medium">Instant</td>
+                            <td class="text-center py-3 text-green-600 font-medium">Instant</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-3 font-medium">Support</td>
+                            <td class="text-center py-3">Basic</td>
+                            <td class="text-center py-3 text-green-600 font-medium">Priority</td>
+                            <td class="text-center py-3 text-green-600 font-medium">Priority</td>
+                            <td class="text-center py-3 text-green-600 font-medium">VIP</td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 font-medium">Exclusive Tasks</td>
+                            <td class="text-center py-3">-</td>
+                            <td class="text-center py-3">-</td>
+                            <td class="text-center py-3 text-green-600 font-medium">✓</td>
+                            <td class="text-center py-3 text-green-600 font-medium">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-bold text-gray-800" id="modalPlanName">Upgrade Plan</h3>
+                    <button onclick="subscriptionManager.closePaymentModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="mb-6">
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-600">Plan</span>
+                            <span id="modalPlanType" class="font-medium">Silver</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Price</span>
+                            <span id="modalPlanPrice" class="text-2xl font-bold text-green-600">₹99</span>
+                        </div>
+                    </div>
+
+                    <div class="text-sm text-gray-600 mb-4">
+                        Your subscription will auto-renew monthly. You can cancel anytime.
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button 
+                        onclick="subscriptionManager.processPayment()"
+                        class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center space-x-2"
+                    >
+                        <i class="fas fa-lock"></i>
+                        <span>Pay with Razorpay</span>
+                    </button>
+                    
+                    <button 
+                        onclick="subscriptionManager.processPayment()"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center space-x-2"
+                    >
+                        <i class="fas fa-wallet"></i>
+                        <span>Pay from Balance</span>
+                    </button>
+                </div>
+
+                <div class="text-xs text-gray-500 mt-4 text-center">
+                    By proceeding, you agree to our Terms of Service and Privacy Policy
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div class="flex justify-around items-center py-3">
+            <a href="dashboard.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-xs">Tasks</span>
+            </a>
+            <a href="subscriptions.html" class="flex flex-col items-center text-green-600">
+                <i class="fas fa-crown text-xl mb-1"></i>
+                <span class="text-xs">Upgrade</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        class SubscriptionManager {
+            constructor() {
+                this.userProfile = null;
+                this.selectedPlan = null;
+                this.plans = {
+                    free: { price: 0, name: 'Free', color: 'gray' },
+                    silver: { price: 99, name: 'Silver', color: 'gray' },
+                    gold: { price: 199, name: 'Gold', color: 'yellow' },
+                    platinum: { price: 499, name: 'Platinum', color: 'purple' }
+                };
+                this.init();
+            }
+
+            async init() {
+                await this.checkAuth();
+                this.updateCurrentPlan();
+            }
+
+            async checkAuth() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                this.userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                this.updateBalance();
+            }
+
+            updateBalance() {
+                document.getElementById('userBalance').textContent = `₹${this.userProfile.balance || '0.00'}`;
+            }
+
+            updateCurrentPlan() {
+                const plan = this.userProfile.subscription_plan || 'free';
+                const planInfo = this.plans[plan];
+                
+                document.getElementById('currentPlanBadge').textContent = planInfo.name + ' Plan';
+                document.getElementById('currentPlanBadge').className = `bg-${planInfo.color}-100 text-${planInfo.color}-700 px-3 py-1 rounded-full text-sm font-medium`;
+                document.getElementById('currentPlanPrice').textContent = `₹${planInfo.price}`;
+                
+                // Update plan description
+                let description = '';
+                switch (plan) {
+                    case 'free':
+                        description = 'Basic features with standard rewards';
+                        break;
+                    case 'silver':
+                        description = '+20% task rewards, priority support';
+                        break;
+                    case 'gold':
+                        description = '+30% task rewards, instant withdrawals';
+                        break;
+                    case 'platinum':
+                        description = '+50% task rewards, VIP features';
+                        break;
+                }
+                document.getElementById('planDescription').textContent = description;
+
+                // Show expiry if not free
+                if (plan !== 'free' && this.userProfile.plan_expires_at) {
+                    const expiry = new Date(this.userProfile.plan_expires_at);
+                    const now = new Date();
+                    const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                    
+                    document.getElementById('planExpiry').textContent = `Expires in ${daysLeft} days`;
+                } else {
+                    document.getElementById('planExpiry').textContent = '';
+                }
+            }
+
+            selectPlan(plan) {
+                if (this.userProfile.subscription_plan === plan) {
+                    alert(`You are already on the ${this.plans[plan].name} plan!`);
+                    return;
+                }
+
+                this.selectedPlan = plan;
+                const planInfo = this.plans[plan];
+
+                document.getElementById('modalPlanName').textContent = `Upgrade to ${planInfo.name}`;
+                document.getElementById('modalPlanType').textContent = `${planInfo.name} Plan`;
+                document.getElementById('modalPlanPrice').textContent = `₹${planInfo.price}`;
+
+                document.getElementById('paymentModal').classList.remove('hidden');
+            }
+
+            closePaymentModal() {
+                document.getElementById('paymentModal').classList.add('hidden');
+                this.selectedPlan = null;
+            }
+
+            async processPayment() {
+                if (!this.selectedPlan) return;
+
+                const planInfo = this.plans[this.selectedPlan];
+                const price = planInfo.price;
+
+                try {
+                    // For demo purposes, we'll simulate payment success
+                    // In real implementation, integrate with Razorpay
+
+                    // Check if user has sufficient balance for wallet payment
+                    if (this.userProfile.balance < price) {
+                        alert(`Insufficient balance. You need ₹${price} but have only ₹${this.userProfile.balance}. Please use Razorpay payment.`);
+                        return;
+                    }
+
+                    // Update user plan in database
+                    const expiryDate = new Date();
+                    expiryDate.setMonth(expiryDate.getMonth() + 1);
+
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ 
+                            subscription_plan: this.selectedPlan,
+                            plan_expires_at: expiryDate.toISOString(),
+                            balance: this.userProfile.balance - price
+                        })
+                        .eq('id', this.userProfile.id);
+
+                    if (updateError) throw updateError;
+
+                    // Record transaction
+                    const transaction = {
+                        user_id: this.userProfile.id,
+                        amount: -price,
+                        type: 'subscription',
+                        status: 'completed',
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { error: txError } = await supabase
+                        .from('transactions')
+                        .insert([transaction]);
+
+                    if (txError) throw txError;
+
+                    // Update local data
+                    this.userProfile.subscription_plan = this.selectedPlan;
+                    this.userProfile.plan_expires_at = expiryDate.toISOString();
+                    this.userProfile.balance -= price;
+                    localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+                    
+                    this.updateBalance();
+                    this.updateCurrentPlan();
+                    this.closePaymentModal();
+
+                    // Show success message
+                    this.showSuccessMessage(planInfo.name);
+
+                } catch (error) {
+                    console.error('Error processing payment:', error);
+                    alert('Error processing payment: ' + error.message);
+                }
+            }
+
+            showSuccessMessage(planName) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 text-center max-w-sm w-full">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-crown text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Plan Activated!</h3>
+                        <p class="text-gray-600 mb-4">You have successfully upgraded to <span class="font-bold">${planName} Plan</span></p>
+                        <p class="text-sm text-gray-500 mb-4">Enjoy enhanced features and higher rewards!</p>
+                        <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium">
+                            Start Earning More
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+        }
+
+        const subscriptionManager = new SubscriptionManager();
+    </script>
+</body>
+</html>
