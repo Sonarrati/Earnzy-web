@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Ads - EARNZY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #0ea5a4 100%); }
+        .bottom-nav { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); }
+        .ad-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .ad-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .progress-bar { transition: width 0.1s linear; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="dashboard.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-xl font-bold">Watch Ads</h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-green-700 bg-opacity-50 px-3 py-1 rounded-lg">
+                <i class="fas fa-coins text-yellow-300"></i>
+                <span id="userBalance" class="font-medium">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 pb-20">
+        <!-- Stats -->
+        <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-600" id="adsWatched">0</div>
+                    <div class="text-sm text-gray-500">Ads Watched</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="adsEarnings">₹0</div>
+                    <div class="text-sm text-gray-500">Total Earned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Ads -->
+        <h2 class="text-lg font-bold text-gray-800 mb-4">Available Ads</h2>
+        <div id="adsContainer" class="space-y-4 mb-6">
+            <!-- Ads will be loaded here -->
+            <div class="text-center py-8">
+                <i class="fas fa-spinner fa-spin text-3xl text-gray-400 mb-3"></i>
+                <div class="text-gray-500">Loading ads...</div>
+            </div>
+        </div>
+
+        <!-- Daily Limit -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+            <div class="flex items-center space-x-2 text-yellow-700">
+                <i class="fas fa-info-circle"></i>
+                <span class="font-medium">Daily Limit: </span>
+                <span id="dailyLimit">10 ads per day</span>
+            </div>
+        </div>
+
+        <!-- Ad Player Modal -->
+        <div id="adModal" class="fixed inset-0 bg-black z-50 hidden flex-col">
+            <!-- Header -->
+            <div class="bg-black text-white p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-tv"></i>
+                    <span>Advertisement</span>
+                </div>
+                <div id="adTimer" class="font-mono">00:30</div>
+            </div>
+
+            <!-- Video Player -->
+            <div class="flex-1 bg-black flex items-center justify-center">
+                <div class="text-center text-white">
+                    <i class="fas fa-play-circle text-6xl mb-4 opacity-50"></i>
+                    <div class="text-lg">Advertisement Video</div>
+                    <div class="text-sm text-gray-400 mt-2">Simulated ad playback</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="bg-gray-800 h-2">
+                <div id="adProgress" class="bg-green-500 h-full progress-bar" style="width: 0%"></div>
+            </div>
+
+            <!-- Controls -->
+            <div class="bg-gray-900 p-4">
+                <div class="text-center text-white mb-3">
+                    <div>Watch the ad completely to earn</div>
+                    <div class="font-bold text-green-400" id="adReward">₹5</div>
+                </div>
+                <button 
+                    id="closeAdBtn" 
+                    class="w-full bg-gray-700 text-white py-3 rounded-lg font-medium opacity-50 cursor-not-allowed"
+                    disabled
+                >
+                    Please wait... (<span id="closeTimer">30</span>s)
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div class="flex justify-around items-center py-3">
+            <a href="dashboard.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-xs">Tasks</span>
+            </a>
+            <a href="watch-ads.html" class="flex flex-col items-center text-green-600">
+                <i class="fas fa-tv text-xl mb-1"></i>
+                <span class="text-xs">Ads</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        class AdsManager {
+            constructor() {
+                this.userProfile = null;
+                this.currentAd = null;
+                this.ads = [];
+                this.timerInterval = null;
+                this.remainingTime = 0;
+                this.init();
+            }
+
+            async init() {
+                await this.checkAuth();
+                await this.loadAds();
+                await this.loadStats();
+            }
+
+            async checkAuth() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                this.userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                this.updateBalance();
+            }
+
+            updateBalance() {
+                document.getElementById('userBalance').textContent = `₹${this.userProfile.balance || '0.00'}`;
+            }
+
+            async loadAds() {
+                // Simulated ads data - in real app, this would come from database
+                this.ads = [
+                    {
+                        id: 'ad1',
+                        title: 'Mobile Game Promotion',
+                        description: 'Watch this 30-second ad about our new mobile game',
+                        duration: 30,
+                        reward: 5,
+                        image: '🎮'
+                    },
+                    {
+                        id: 'ad2',
+                        title: 'E-commerce App',
+                        description: 'Learn about amazing shopping deals',
+                        duration: 25,
+                        reward: 4,
+                        image: '🛍️'
+                    },
+                    {
+                        id: 'ad3',
+                        title: 'Food Delivery Service',
+                        description: 'Discover quick food delivery options',
+                        duration: 20,
+                        reward: 3,
+                        image: '🍕'
+                    },
+                    {
+                        id: 'ad4',
+                        title: 'Fitness App',
+                        description: 'Transform your fitness journey',
+                        duration: 35,
+                        reward: 6,
+                        image: '💪'
+                    }
+                ];
+
+                this.renderAds();
+            }
+
+            renderAds() {
+                const container = document.getElementById('adsContainer');
+                
+                container.innerHTML = this.ads.map(ad => `
+                    <div class="ad-card bg-white rounded-xl p-4 shadow-md border-l-4 border-blue-500">
+                        <div class="flex items-start space-x-4">
+                            <div class="text-3xl">${ad.image}</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-800 mb-1">${ad.title}</h3>
+                                <p class="text-gray-600 text-sm mb-3">${ad.description}</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <div class="flex items-center space-x-1">
+                                            <i class="fas fa-clock"></i>
+                                            <span>${ad.duration}s</span>
+                                        </div>
+                                        <div class="flex items-center space-x-1">
+                                            <i class="fas fa-coins"></i>
+                                            <span>₹${ad.reward}</span>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onclick="adsManager.startAd('${ad.id}')"
+                                        class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                                    >
+                                        Watch Ad
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            async loadStats() {
+                // Load ads watched today
+                const today = new Date().toISOString().split('T')[0];
+                const { data: adsWatched, error } = await supabase
+                    .from('transactions')
+                    .select('amount')
+                    .eq('user_id', this.userProfile.id)
+                    .eq('type', 'ad_reward')
+                    .gte('created_at', today);
+
+                if (!error) {
+                    const count = adsWatched?.length || 0;
+                    const earnings = adsWatched?.reduce((sum, t) => sum + t.amount, 0) || 0;
+                    
+                    document.getElementById('adsWatched').textContent = count;
+                    document.getElementById('adsEarnings').textContent = `₹${earnings}`;
+                    
+                    const remaining = Math.max(0, 10 - count);
+                    document.getElementById('dailyLimit').textContent = `${remaining} ads remaining today`;
+                }
+            }
+
+            startAd(adId) {
+                this.currentAd = this.ads.find(ad => ad.id === adId);
+                if (!this.currentAd) return;
+
+                // Check daily limit
+                const adsWatched = parseInt(document.getElementById('adsWatched').textContent);
+                if (adsWatched >= 10) {
+                    alert('You have reached your daily limit of 10 ads. Come back tomorrow!');
+                    return;
+                }
+
+                this.remainingTime = this.currentAd.duration;
+                document.getElementById('adReward').textContent = `₹${this.currentAd.reward}`;
+                document.getElementById('adModal').classList.remove('hidden');
+
+                this.startTimer();
+            }
+
+            startTimer() {
+                const timerElement = document.getElementById('adTimer');
+                const closeTimerElement = document.getElementById('closeTimer');
+                const closeButton = document.getElementById('closeAdBtn');
+                const progressBar = document.getElementById('adProgress');
+
+                const totalTime = this.currentAd.duration;
+                let currentTime = 0;
+
+                this.timerInterval = setInterval(() => {
+                    currentTime++;
+                    this.remainingTime--;
+
+                    const minutes = Math.floor(this.remainingTime / 60);
+                    const seconds = this.remainingTime % 60;
+                    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    closeTimerElement.textContent = this.remainingTime;
+
+                    // Update progress bar
+                    const progress = (currentTime / totalTime) * 100;
+                    progressBar.style.width = `${progress}%`;
+
+                    if (this.remainingTime <= 0) {
+                        this.completeAd();
+                    }
+                }, 1000);
+            }
+
+            async completeAd() {
+                clearInterval(this.timerInterval);
+
+                // Enable close button
+                const closeButton = document.getElementById('closeAdBtn');
+                closeButton.disabled = false;
+                closeButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                closeButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                closeButton.textContent = 'Get Reward ₹' + this.currentAd.reward;
+
+                closeButton.onclick = () => {
+                    this.claimReward();
+                };
+            }
+
+            async claimReward() {
+                try {
+                    // Update user balance
+                    const newBalance = (this.userProfile.balance || 0) + this.currentAd.reward;
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ balance: newBalance })
+                        .eq('id', this.userProfile.id);
+
+                    if (updateError) throw updateError;
+
+                    // Record transaction
+                    const transaction = {
+                        user_id: this.userProfile.id,
+                        amount: this.currentAd.reward,
+                        type: 'ad_reward',
+                        status: 'completed',
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { error: txError } = await supabase
+                        .from('transactions')
+                        .insert([transaction]);
+
+                    if (txError) throw txError;
+
+                    // Update local profile
+                    this.userProfile.balance = newBalance;
+                    localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+                    this.updateBalance();
+
+                    // Close modal and reload stats
+                    this.closeAdModal();
+                    await this.loadStats();
+
+                    alert(`Congratulations! You earned ₹${this.currentAd.reward} for watching the ad.`);
+
+                } catch (error) {
+                    console.error('Error claiming reward:', error);
+                    alert('Error claiming reward: ' + error.message);
+                }
+            }
+
+            closeAdModal() {
+                clearInterval(this.timerInterval);
+                document.getElementById('adModal').classList.add('hidden');
+                
+                // Reset button
+                const closeButton = document.getElementById('closeAdBtn');
+                closeButton.disabled = true;
+                closeButton.classList.add('opacity-50', 'cursor-not-allowed');
+                closeButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                closeButton.textContent = 'Please wait...';
+                closeButton.onclick = null;
+
+                // Reset progress
+                document.getElementById('adProgress').style.width = '0%';
+            }
+        }
+
+        const adsManager = new AdsManager();
+    </script>
+</body>
+</html>
