@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EARNZY - Earn Real Cash Daily</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #0ea5a4 100%);
+        }
+        .bottom-nav {
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .stats-counter {
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header/Navigation -->
+    <header class="gradient-bg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-wallet text-2xl"></i>
+                <h1 class="text-2xl font-bold">EARNZY</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#features" class="hover:text-green-200 transition">Features</a>
+                <a href="#how-it-works" class="hover:text-green-200 transition">How It Works</a>
+                <a href="#testimonials" class="hover:text-green-200 transition">Testimonials</a>
+                <a href="#faq" class="hover:text-green-200 transition">FAQ</a>
+            </div>
+            <div>
+                <a href="login.html" class="bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-green-50 transition">Login / Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Earn Real Cash Daily with Simple Tasks</h1>
+                <p class="text-xl mb-8 text-green-100">Complete verified tasks, watch ads, refer friends, and get paid instantly. Join thousands of users earning with EARNZY!</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="login.html" class="bg-white text-green-600 px-6 py-3 rounded-lg font-bold text-center hover:bg-green-50 transition pulse-animation">Start Earning Now</a>
+                    <a href="#how-it-works" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-bold text-center hover:bg-white hover:bg-opacity-10 transition">How It Works</a>
+                </div>
+                <div class="mt-8 flex items-center space-x-4">
+                    <div class="flex -space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-green-300 border-2 border-white"></div>
+                        <div class="w-10 h-10 rounded-full bg-green-400 border-2 border-white"></div>
+                        <div class="w-10 h-10 rounded-full bg-green-500 border-2 border-white"></div>
+                        <div class="w-10 h-10 rounded-full bg-green-600 border-2 border-white flex items-center justify-center text-white text-xs">5K+</div>
+                    </div>
+                    <p class="text-green-100">Join 5,000+ active users earning daily</p>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="bg-white rounded-2xl p-4 shadow-2xl max-w-md">
+                    <div class="bg-gray-100 rounded-xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-medium">₹2 Signup Bonus</div>
+                            <div class="text-gray-500">EARNZY Wallet</div>
+                        </div>
+                        <div class="text-3xl font-bold text-gray-800 mb-2">₹125.50</div>
+                        <div class="text-gray-500 text-sm mb-6">Available Balance</div>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50 p-3 rounded-lg">
+                                <div class="text-green-600 font-bold">₹25</div>
+                                <div class="text-xs text-gray-500">Withdraw Today</div>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg">
+                                <div class="text-blue-600 font-bold">12</div>
+                                <div class="text-xs text-gray-500">Tasks Done</div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm font-medium">Withdraw</button>
+                            <button class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium">Earn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="stats-counter">
+                    <div class="text-3xl font-bold text-green-600">₹2,50,000+</div>
+                    <div class="text-gray-500">Total Payouts</div>
+                </div>
+                <div class="stats-counter">
+                    <div class="text-3xl font-bold text-green-600">5,000+</div>
+                    <div class="text-gray-500">Active Users</div>
+                </div>
+                <div class="stats-counter">
+                    <div class="text-3xl font-bold text-green-600">50,000+</div>
+                    <div class="text-gray-500">Tasks Completed</div>
+                </div>
+                <div class="stats-counter">
+                    <div class="text-3xl font-bold text-green-600">98%</div>
+                    <div class="text-gray-500">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">How You Can Earn</h2>
+            <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">EARNZY offers multiple ways to earn real cash through verified tasks and activities.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white rounded-xl p-6 shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-tasks text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Complete Tasks</h3>
+                    <p class="text-gray-600 mb-4">Complete simple verified tasks and earn ₹5 to ₹50 per task with proof submission.</p>
+                    <div class="text-green-600 font-medium">Earn ₹5 - ₹50 per task</div>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white rounded-xl p-6 shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-tv text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Watch Ads</h3>
+                    <p class="text-gray-600 mb-4">Watch short video ads and earn money for every ad you complete.</p>
+                    <div class="text-green-600 font-medium">Earn ₹1 - ₹10 per ad</div>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white rounded-xl p-6 shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-calendar-check text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Daily Check-ins</h3>
+                    <p class="text-gray-600 mb-4">Login daily to claim your bonus and increase your earnings streak.</p>
+                    <div class="text-green-600 font-medium">Earn ₹2 - ₹10 daily</div>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card bg-white rounded-xl p-6 shadow-md">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-user-friends text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Refer Friends</h3>
+                    <p class="text-gray-600 mb-4">Invite friends and earn 20% of their earnings for their first month.</p>
+                    <div class="text-green-600 font-medium">Earn 20% commission</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">How EARNZY Works</h2>
+            <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Simple steps to start earning real cash with verified tasks.</p>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <div class="relative">
+                        <!-- Step 1 -->
+                        <div class="flex items-start mb-10">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">1</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Sign Up & Get Bonus</h3>
+                                <p class="text-gray-600">Create your account with Google or Mobile OTP and get ₹2 signup bonus instantly.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="flex items-start mb-10">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">2</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Complete Tasks</h3>
+                                <p class="text-gray-600">Browse available tasks, complete them, and submit proof for verification.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="flex items-start mb-10">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">3</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Get Verified</h3>
+                                <p class="text-gray-600">Our admin team verifies your task completion and approves your earnings.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 -->
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">4</div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Withdraw Earnings</h3>
+                                <p class="text-gray-600">Withdraw your earnings to UPI, Paytm, or bank account once you reach ₹25.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-2/5">
+                    <div class="bg-gray-100 rounded-2xl p-6">
+                        <div class="text-center mb-6">
+                            <div class="text-green-600 font-bold text-lg">Task Example</div>
+                            <div class="text-gray-500">Install & Review an App</div>
+                        </div>
+                        <div class="bg-white rounded-xl p-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fas fa-mobile-alt text-green-600"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold">Install "AppName"</div>
+                                    <div class="text-sm text-gray-500">Earn ₹15</div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Install the app from Play Store, use it for 5 minutes, and submit a screenshot as proof.</p>
+                            <div class="flex justify-between items-center">
+                                <div class="text-xs text-gray-500">Time: 5 mins</div>
+                                <button class="bg-green-500 text-white px-3 py-1 rounded-lg text-sm">Start Task</button>
+                            </div>
+                        </div>
+                        <div class="text-center text-sm text-gray-500">
+                            <i class="fas fa-shield-alt mr-1 text-green-500"></i>
+                            Verified & Secure Task
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Subscription Plans -->
+    <section class="py-16 bg-gradient-to-br from-green-50 to-cyan-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Boost Your Earnings</h2>
+            <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Upgrade to premium plans for higher rewards and instant withdrawals.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="text-gray-500 font-medium mb-2">Free</div>
+                    <div class="text-3xl font-bold mb-4">₹0</div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>Standard Task Rewards</li>
+                        <li>Standard Ad Rewards</li>
+                        <li>24-48h Withdrawal</li>
+                        <li>Basic Support</li>
+                    </ul>
+                    <button class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg font-medium">Current Plan</button>
+                </div>
+                
+                <!-- Silver Plan -->
+                <div class="bg-white rounded-xl p-6 shadow-md text-center border-2 border-green-300 relative">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">POPULAR</div>
+                    <div class="text-green-600 font-medium mb-2">Silver</div>
+                    <div class="text-3xl font-bold mb-4">₹99<span class="text-sm text-gray-500">/month</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>+20% Task Rewards</li>
+                        <li>+10% Ad Rewards</li>
+                        <li>12-24h Withdrawal</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <button class="w-full gradient-bg text-white py-2 rounded-lg font-medium">Upgrade Now</button>
+                </div>
+                
+                <!-- Gold Plan -->
+                <div class="bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="text-yellow-600 font-medium mb-2">Gold</div>
+                    <div class="text-3xl font-bold mb-4">₹199<span class="text-sm text-gray-500">/month</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>+30% Task Rewards</li>
+                        <li>+20% Ad Rewards</li>
+                        <li>Instant Withdrawal</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <button class="w-full gradient-bg text-white py-2 rounded-lg font-medium">Upgrade Now</button>
+                </div>
+                
+                <!-- Platinum Plan -->
+                <div class="bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="text-purple-600 font-medium mb-2">Platinum</div>
+                    <div class="text-3xl font-bold mb-4">₹499<span class="text-sm text-gray-500">/month</span></div>
+                    <ul class="text-sm text-gray-600 mb-6 space-y-2">
+                        <li>+50% Task Rewards</li>
+                        <li>+30% Ad Rewards</li>
+                        <li>Instant Withdrawal</li>
+                        <li>VIP Support</li>
+                    </ul>
+                    <button class="w-full gradient-bg text-white py-2 rounded-lg font-medium">Upgrade Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">What Our Users Say</h2>
+            <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Real users, real earnings. Join thousands who are earning with EARNZY.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-200 rounded-full mr-4"></div>
+                        <div>
+                            <div class="font-bold">Rahul S.</div>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"I've earned over ₹3,000 in just two months by completing simple tasks during my free time. The withdrawal process is smooth and payments are always on time."</p>
+                    <div class="text-green-600 font-medium">Earned: ₹3,250</div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-200 rounded-full mr-4"></div>
+                        <div>
+                            <div class="font-bold">Priya M.</div>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"As a college student, EARNZY helps me earn pocket money without affecting my studies. The tasks are simple and the verification process is fair."</p>
+                    <div class="text-green-600 font-medium">Earned: ₹1,850</div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-200 rounded-full mr-4"></div>
+                        <div>
+                            <div class="font-bold">Amit K.</div>
+                            <div class="text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"I was skeptical at first, but after my first withdrawal, I was convinced. Now I regularly earn ₹50-100 daily by completing tasks and watching ads."</p>
+                    <div class="text-green-600 font-medium">Earned: ₹5,700</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Frequently Asked Questions</h2>
+            <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Get answers to common questions about EARNZY.</p>
+            
+            <div class="max-w-3xl mx-auto">
+                <!-- FAQ 1 -->
+                <div class="bg-white rounded-xl p-6 mb-4 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">How do I start earning with EARNZY?</h3>
+                        <i class="fas fa-chevron-down text-green-600"></i>
+                    </div>
+                    <p class="mt-3 text-gray-600">Simply sign up with your Google account or mobile number, complete the verification, and you'll receive ₹2 as a signup bonus. Then browse available tasks and start earning!</p>
+                </div>
+                
+                <!-- FAQ 2 -->
+                <div class="bg-white rounded-xl p-6 mb-4 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">How do I withdraw my earnings?</h3>
+                        <i class="fas fa-chevron-down text-green-600"></i>
+                    </div>
+                    <p class="mt-3 text-gray-600">You can withdraw your earnings once you reach the minimum balance of ₹25. Go to the Withdraw section, choose your preferred method (UPI, Paytm, or bank transfer), and request withdrawal. Free users get payments within 24-48 hours, while premium users get instant withdrawals.</p>
+                </div>
+                
+                <!-- FAQ 3 -->
+                <div class="bg-white rounded-xl p-6 mb-4 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Is EARNZY completely free to use?</h3>
+                        <i class="fas fa-chevron-down text-green-600"></i>
+                    </div>
+                    <p class="mt-3 text-gray-600">Yes, the basic version of EARNZY is completely free. You can earn money without any investment. We also offer premium subscription plans that give you higher rewards and faster withdrawals, but they're optional.</p>
+                </div>
+                
+                <!-- FAQ 4 -->
+                <div class="bg-white rounded-xl p-6 mb-4 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">How are tasks verified?</h3>
+                        <i class="fas fa-chevron-down text-green-600"></i>
+                    </div>
+                    <p class="mt-3 text-gray-600">After completing a task, you submit proof (screenshot or text) through our system. Our admin team reviews each submission manually to ensure task completion meets requirements. This process usually takes 1-6 hours.</p>
+                </div>
+                
+                <!-- FAQ 5 -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Can I use EARNZY on multiple devices?</h3>
+                        <i class="fas fa-chevron-down text-green-600"></i>
+                    </div>
+                    <p class="mt-3 text-gray-600">For security reasons, each account is limited to one primary device. Our system tracks devices to prevent fraud. If you need to change devices, contact our support team for assistance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">Ready to Start Earning?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto text-green-100">Join thousands of users who are earning real cash with simple daily tasks. Sign up now and get your ₹2 bonus!</p>
+            <a href="login.html" class="bg-white text-green-600 px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-50 transition inline-block">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-wallet text-2xl text-green-400"></i>
+                        <h3 class="text-2xl font-bold">EARNZY</h3>
+                    </div>
+                    <p class="text-gray-400">Earn real cash daily through verified tasks, ads, and referrals. Join India's trusted micro-earning platform.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                        <li><a href="#how-it-works" class="hover:text-white transition">How It Works</a></li>
+                        <li><a href="#testimonials" class="hover:text-white transition">Testimonials</a></li>
+                        <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Refund Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Disclaimer</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-green-400"></i>
+                            <span>support@earnzy.in</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2 text-green-400"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-400"></i>
+                            <span>Mumbai, India</span>
+                        </li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-500 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-500 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-500 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-500 transition">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 EARNZY. All rights reserved. Payouts subject to verification.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <div class="bottom-nav fixed bottom-0 left-0 right-0 bg-white md:hidden z-50">
+        <div class="flex justify-around items-center py-3">
+            <a href="dashboard.html" class="flex flex-col items-center text-green-600">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-xs">Tasks</span>
+            </a>
+            <a href="withdraw.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-wallet text-xl mb-1"></i>
+                <span class="text-xs">Withdraw</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Simple counter animation for stats
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stats-counter');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.querySelector('div').textContent);
+                        let current = 0;
+                        const increment = target / 50;
+                        
+                        const updateCounter = () => {
+                            if (current < target) {
+                                current += increment;
+                                counter.querySelector('div').textContent = Math.floor(current) + '+';
+                                setTimeout(updateCounter, 30);
+                            } else {
+                                counter.querySelector('div').textContent = target + '+';
+                            }
+                        };
+                        
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+            
+            // FAQ toggle functionality
+            const faqItems = document.querySelectorAll('#faq .bg-white');
+            faqItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const answer = item.querySelector('p');
+                    const icon = item.querySelector('i');
+                    
+                    if (answer.style.maxHeight) {
+                        answer.style.maxHeight = null;
+                        icon.className = 'fas fa-chevron-down text-green-600';
+                    } else {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                        icon.className = 'fas fa-chevron-up text-green-600';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
