@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Check-in - EARNZY</title>
+    <!-- Same head content as previous pages -->
+</head>
+<body class="bg-gray-50">
+    <!-- Header similar to other pages -->
+    
+    <main class="container mx-auto px-4 py-6 pb-20">
+        <!-- Check-in Calendar -->
+        <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Daily Check-in</h2>
+            <div class="text-center mb-6">
+                <div id="checkinStatus" class="text-lg font-medium"></div>
+                <div id="streakCount" class="text-2xl font-bold text-green-600 mt-2">0 days</div>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-2 mb-6">
+                <!-- Days will be populated by JavaScript -->
+            </div>
+
+            <button 
+                id="checkinBtn"
+                class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Check In Today
+            </button>
+        </div>
+
+        <!-- Rewards Info -->
+        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+            <h3 class="font-bold text-yellow-800 mb-2">Daily Rewards</h3>
+            <div class="space-y-2 text-sm text-yellow-700">
+                <div>Day 1-3: ₹2 daily</div>
+                <div>Day 4-7: ₹5 daily</div>
+                <div>Day 8+: ₹10 daily</div>
+                <div class="text-xs mt-2">* Streak resets if you miss a day</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // JavaScript for check-in functionality
+        // Similar structure to other pages
+    </script>
+</body>
+</html>
