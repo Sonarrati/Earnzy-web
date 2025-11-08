@@ -4,52 +4,423 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Check-in - EARNZY</title>
-    <!-- Same head content as previous pages -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #0ea5a4 100%); }
+        .bottom-nav { box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); }
+        .day-checked { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Header similar to other pages -->
-    
-    <main class="container mx-auto px-4 py-6 pb-20">
-        <!-- Check-in Calendar -->
-        <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Daily Check-in</h2>
-            <div class="text-center mb-6">
-                <div id="checkinStatus" class="text-lg font-medium"></div>
-                <div id="streakCount" class="text-2xl font-bold text-green-600 mt-2">0 days</div>
+    <!-- Header -->
+    <header class="gradient-bg text-white sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="dashboard.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1 class="text-xl font-bold">Daily Check-in</h1>
             </div>
+            <div class="flex items-center space-x-2 bg-green-700 bg-opacity-50 px-3 py-1 rounded-lg">
+                <i class="fas fa-coins text-yellow-300"></i>
+                <span id="userBalance" class="font-medium">Loading...</span>
+            </div>
+        </div>
+    </header>
 
-            <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-2 mb-6">
-                <!-- Days will be populated by JavaScript -->
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 pb-20">
+        <!-- Check-in Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-md mb-6 text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4 pulse-animation">
+                <i class="fas fa-calendar-check text-white text-2xl"></i>
+            </div>
+            
+            <h2 class="text-xl font-bold text-gray-800 mb-2" id="checkinTitle">Daily Check-in</h2>
+            <p class="text-gray-600 mb-4" id="checkinSubtitle">Claim your daily reward and build your streak!</p>
+            
+            <div class="flex justify-center items-center space-x-4 mb-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600" id="currentStreak">0</div>
+                    <div class="text-sm text-gray-500">Current Streak</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-600" id="totalCheckins">0</div>
+                    <div class="text-sm text-gray-500">Total Check-ins</div>
+                </div>
             </div>
 
             <button 
                 id="checkinBtn"
-                class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed pulse-animation"
             >
-                Check In Today
+                <span id="checkinBtnText">Check In Today</span>
+                <div id="checkinReward" class="text-sm font-normal mt-1">+ ₹2</div>
             </button>
+
+            <div id="alreadyCheckedIn" class="hidden bg-green-50 border border-green-200 rounded-lg p-4 mt-4">
+                <div class="flex items-center justify-center space-x-2 text-green-700">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="font-medium">Already checked in today!</span>
+                </div>
+                <div class="text-sm text-green-600 mt-1">Come back tomorrow for your next reward</div>
+            </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="bg-white rounded-2xl p-6 shadow-md mb-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Monthly Calendar</h3>
+            
+            <!-- Month Selector -->
+            <div class="flex justify-between items-center mb-4">
+                <button id="prevMonth" class="p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h4 id="currentMonth" class="font-bold text-gray-800">January 2024</h4>
+                <button id="nextMonth" class="p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-2 text-center">
+                <div class="text-sm font-medium text-gray-500 py-2">Sun</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Mon</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Tue</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Wed</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Thu</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Fri</div>
+                <div class="text-sm font-medium text-gray-500 py-2">Sat</div>
+                
+                <!-- Calendar days will be populated by JavaScript -->
+                <div id="calendarDays" class="col-span-7 grid grid-cols-7 gap-2">
+                    <!-- Days will be generated here -->
+                </div>
+            </div>
         </div>
 
         <!-- Rewards Info -->
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-            <h3 class="font-bold text-yellow-800 mb-2">Daily Rewards</h3>
-            <div class="space-y-2 text-sm text-yellow-700">
-                <div>Day 1-3: ₹2 daily</div>
-                <div>Day 4-7: ₹5 daily</div>
-                <div>Day 8+: ₹10 daily</div>
-                <div class="text-xs mt-2">* Streak resets if you miss a day</div>
+        <div class="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
+            <h3 class="font-bold text-yellow-800 mb-3">Daily Rewards System</h3>
+            <div class="space-y-3 text-sm">
+                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                    <span>Days 1-3</span>
+                    <span class="font-bold text-green-600">₹2 daily</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                    <span>Days 4-7</span>
+                    <span class="font-bold text-green-600">₹5 daily</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                    <span>Week 2</span>
+                    <span class="font-bold text-green-600">₹8 daily</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-white rounded-lg">
+                    <span>Week 3+</span>
+                    <span class="font-bold text-green-600">₹10 daily</span>
+                </div>
+            </div>
+            <div class="text-xs text-yellow-700 mt-3 text-center">
+                * Streak bonus: Complete 7 consecutive days for ₹20 bonus
             </div>
         </div>
     </main>
 
     <!-- Bottom Navigation -->
-    
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40">
+        <div class="flex justify-around items-center py-3">
+            <a href="dashboard.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-tasks text-xl mb-1"></i>
+                <span class="text-xs">Tasks</span>
+            </a>
+            <a href="checkin.html" class="flex flex-col items-center text-green-600">
+                <i class="fas fa-calendar-check text-xl mb-1"></i>
+                <span class="text-xs">Check-in</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center text-gray-500">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span class="text-xs">Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
     <script src="js/supabase.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // JavaScript for check-in functionality
-        // Similar structure to other pages
+        class CheckinManager {
+            constructor() {
+                this.userProfile = null;
+                this.currentDate = new Date();
+                this.checkinHistory = [];
+                this.init();
+            }
+
+            async init() {
+                await this.checkAuth();
+                await this.loadCheckinData();
+                this.setupEventListeners();
+                this.renderCalendar();
+            }
+
+            async checkAuth() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                this.userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                this.updateBalance();
+            }
+
+            updateBalance() {
+                document.getElementById('userBalance').textContent = `₹${this.userProfile.balance || '0.00'}`;
+            }
+
+            async loadCheckinData() {
+                // Load user's check-in history
+                const { data: checkins, error } = await supabase
+                    .from('transactions')
+                    .select('created_at, amount')
+                    .eq('user_id', this.userProfile.id)
+                    .eq('type', 'daily_checkin')
+                    .order('created_at', { ascending: false });
+
+                if (!error) {
+                    this.checkinHistory = checkins || [];
+                    this.updateCheckinUI();
+                }
+
+                // Check if user already checked in today
+                const today = new Date().toISOString().split('T')[0];
+                const todayCheckin = this.checkinHistory.find(c => 
+                    c.created_at.split('T')[0] === today
+                );
+
+                if (todayCheckin) {
+                    document.getElementById('checkinBtn').disabled = true;
+                    document.getElementById('checkinBtn').classList.remove('pulse-animation');
+                    document.getElementById('checkinBtnText').textContent = 'Already Checked In';
+                    document.getElementById('alreadyCheckedIn').classList.remove('hidden');
+                }
+            }
+
+            updateCheckinUI() {
+                // Calculate streak
+                const streak = this.calculateStreak();
+                document.getElementById('currentStreak').textContent = streak;
+                
+                // Update total check-ins
+                document.getElementById('totalCheckins').textContent = this.checkinHistory.length;
+
+                // Update reward amount based on streak
+                const reward = this.calculateReward(streak);
+                document.getElementById('checkinReward').textContent = `+ ₹${reward}`;
+            }
+
+            calculateStreak() {
+                if (this.checkinHistory.length === 0) return 0;
+
+                let streak = 0;
+                const today = new Date();
+                let currentDate = new Date(today);
+
+                // Check consecutive days from today backwards
+                for (let i = 0; i < 30; i++) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    const hasCheckin = this.checkinHistory.some(c => 
+                        c.created_at.split('T')[0] === dateStr
+                    );
+
+                    if (hasCheckin) {
+                        streak++;
+                        currentDate.setDate(currentDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+
+                return streak;
+            }
+
+            calculateReward(streak) {
+                if (streak < 3) return 2;
+                if (streak < 7) return 5;
+                if (streak < 14) return 8;
+                return 10;
+            }
+
+            async performCheckin() {
+                const checkinBtn = document.getElementById('checkinBtn');
+                checkinBtn.disabled = true;
+                
+                try {
+                    const streak = this.calculateStreak();
+                    const reward = this.calculateReward(streak);
+                    const today = new Date().toISOString().split('T')[0];
+
+                    // Check if already checked in today
+                    const { data: existingCheckin } = await supabase
+                        .from('transactions')
+                        .select('id')
+                        .eq('user_id', this.userProfile.id)
+                        .eq('type', 'daily_checkin')
+                        .gte('created_at', today)
+                        .single();
+
+                    if (existingCheckin) {
+                        alert('You have already checked in today!');
+                        return;
+                    }
+
+                    // Update user balance
+                    const newBalance = (this.userProfile.balance || 0) + reward;
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ balance: newBalance })
+                        .eq('id', this.userProfile.id);
+
+                    if (updateError) throw updateError;
+
+                    // Record transaction
+                    const transaction = {
+                        user_id: this.userProfile.id,
+                        amount: reward,
+                        type: 'daily_checkin',
+                        status: 'completed',
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { error: txError } = await supabase
+                        .from('transactions')
+                        .insert([transaction]);
+
+                    if (txError) throw txError;
+
+                    // Update local data
+                    this.userProfile.balance = newBalance;
+                    localStorage.setItem('userProfile', JSON.stringify(this.userProfile));
+                    this.updateBalance();
+
+                    // Add to checkin history
+                    this.checkinHistory.unshift(transaction);
+                    this.updateCheckinUI();
+
+                    // Update UI
+                    checkinBtn.classList.remove('pulse-animation');
+                    document.getElementById('checkinBtnText').textContent = 'Already Checked In';
+                    document.getElementById('alreadyCheckedIn').classList.remove('hidden');
+
+                    // Show success message
+                    this.showSuccessMessage(reward);
+
+                } catch (error) {
+                    console.error('Error during check-in:', error);
+                    alert('Error during check-in: ' + error.message);
+                    checkinBtn.disabled = false;
+                }
+            }
+
+            showSuccessMessage(reward) {
+                // Create success modal
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-2xl p-8 text-center max-w-sm w-full">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-check text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Check-in Successful!</h3>
+                        <p class="text-gray-600 mb-4">You've earned <span class="font-bold text-green-600">₹${reward}</span> for today's check-in</p>
+                        <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium">
+                            Continue
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            renderCalendar() {
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+                
+                const currentMonth = this.currentDate.getMonth();
+                const currentYear = this.currentDate.getFullYear();
+                
+                document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+                // Get first day of month and number of days
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                
+                const calendarDays = document.getElementById('calendarDays');
+                calendarDays.innerHTML = '';
+
+                // Add empty cells for days before first day of month
+                for (let i = 0; i < firstDay; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'h-10';
+                    calendarDays.appendChild(emptyCell);
+                }
+
+                // Add days of the month
+                const today = new Date();
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'h-10 flex items-center justify-center rounded-lg border border-gray-200';
+                    
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const hasCheckin = this.checkinHistory.some(c => 
+                        c.created_at.split('T')[0] === dateStr
+                    );
+
+                    if (hasCheckin) {
+                        dayElement.classList.add('day-checked', 'text-white');
+                    } else if (day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
+                        dayElement.classList.add('bg-green-100', 'border-green-300', 'text-green-700');
+                    }
+
+                    dayElement.textContent = day;
+                    calendarDays.appendChild(dayElement);
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('checkinBtn').addEventListener('click', () => {
+                    this.performCheckin();
+                });
+
+                document.getElementById('prevMonth').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                    this.renderCalendar();
+                });
+
+                document.getElementById('nextMonth').addEventListener('click', () => {
+                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                    this.renderCalendar();
+                });
+            }
+        }
+
+        // Initialize checkin manager
+        document.addEventListener('DOMContentLoaded', () => {
+            new CheckinManager();
+        });
     </script>
 </body>
 </html>
